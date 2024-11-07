@@ -49,6 +49,8 @@ class _EventDetailViewState extends State<EventDetailView> {
               widget.event.endTime =
                   widget.event.startTime.add(const Duration(hours: 1));
             }
+          } else {
+            widget.event.endTime = newDateTime;
           }
         });
       }
