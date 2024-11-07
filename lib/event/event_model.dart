@@ -53,13 +53,15 @@ class EventModel {
 
   factory EventModel.fromMap(Map<String, dynamic> map) {
     return EventModel(
-      id: map['id'] as String,
+      id: map['id'] != null ? map['id'] as String : null,
       startTime: DateTime.fromMillisecondsSinceEpoch(map['startTime'] as int),
       endTime: DateTime.fromMillisecondsSinceEpoch(map['endTime'] as int),
       isAllDay: map['isAllDay'] as bool,
       subject: map['subject'] as String,
-      notes: map['notes'] as String,
-      recurrenceRule: map['recurrenceRule'] as String,
+      notes: map['notes'] != null ? map['notes'] as String : null,
+      recurrenceRule: map['recurrenceRule'] != null
+          ? map['recurrenceRule'] as String
+          : null,
     );
   }
 
@@ -100,7 +102,7 @@ class EventModel {
 
 extension ExEventModel on EventModel {
   String get formatedStartTimeString =>
-      '${startTime.hour}:${startTime.minute}, ${startTime.day}/${startTime.month}/${startTime.year}';
+      '${startTime.hour}:${startTime.minute},${startTime.day}/${startTime.month}/${startTime.year}';
   String get formatedEndTimeString =>
-      '${endTime.hour}:${endTime.minute}, ${endTime.day}/${endTime.month}/${endTime.year}';
+      '${endTime.hour}:${endTime.minute},${endTime.day}/${endTime.month}/${endTime.year}';
 }

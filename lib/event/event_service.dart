@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class EventService {
   final db = Localstore.getInstance(useSupportDir: true);
   final path = 'events';
+
   Future<List<EventModel>> getAllEvents() async {
     final eventsMap = await db.collection(path).get();
     if (eventsMap != null) {
@@ -25,7 +26,6 @@ class EventService {
   }
 
   Future<void> deleteEvent(EventModel item) async {
-    // item.id ??= db.collection(path).doc().id;
     await db.collection(path).doc(item.id).delete();
   }
 }

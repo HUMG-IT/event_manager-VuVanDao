@@ -2,7 +2,9 @@ import 'package:event_manager/event/event_data_source.dart';
 import 'package:event_manager/event/event_detail_view.dart';
 import 'package:event_manager/event/event_model.dart';
 import 'package:event_manager/event/event_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -19,12 +21,13 @@ class _EventViewState extends State<EventView> {
   final calendarController = CalendarController();
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     calendarController.view = CalendarView.day;
-    loadEvent();
+    loadEvents();
   }
 
-  Future<void> loadEvent() async {
+  Future<void> loadEvents() async {
     final events = await eventService.getAllEvents();
     setState(() {
       items = events;
@@ -58,7 +61,7 @@ class _EventViewState extends State<EventView> {
                 calendarController.displayDate = DateTime.now();
               },
               icon: const Icon(Icons.today_outlined)),
-          IconButton(onPressed: loadEvent, icon: const Icon(Icons.refresh))
+          IconButton(onPressed: loadEvents, icon: const Icon(Icons.refresh))
         ],
       ),
       body: SfCalendar(
@@ -66,29 +69,19 @@ class _EventViewState extends State<EventView> {
         dataSource: EventDataSource(items),
         monthViewSettings: const MonthViewSettings(
             appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-        onLongPress: (detail) {
-          if (detail.targetElement == CalendarElement.calendarCell) {
+        onLongPress: (details) {
+          if (details.targetElement == CalendarElement.calendarCell) {
             final newEvent = EventModel(
-                startTime: detail.date!,
-                endTime: detail.date!.add(const Duration(hours: 1)),
+                startTime: details.date!,
+                endTime: details.date!.add(const Duration(hours: 1)),
                 subject: "Sự kiện mới");
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return EventDetailView(event: newEvent);
-            })).then((value) async {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return EventDetailView(event: newEvent);
+              },
+            )).then((value) async {
               if (value == true) {
-                await loadEvent();
-              }
-            });
-          }
-        },
-        onTap: (details) {
-          if (details.targetElement == CalendarElement.appointment) {
-            final EventModel event = details.appointments!.first;
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return EventDetailView(event: event);
-            })).then((value) async {
-              if (value == true) {
-                await loadEvent();
+                await loadEvents();
               }
             });
           }
