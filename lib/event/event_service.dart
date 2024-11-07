@@ -10,7 +10,7 @@ class EventService {
     if (eventsMap != null) {
       return eventsMap.entries.map((entry) {
         final eventData = entry.value as Map<String, dynamic>;
-        if (!eventData.containsKey("id")) {
+        if (!eventData.containsKey('id')) {
           eventData['id'] = entry.key.split('/').last;
         }
         return EventModel.fromMap(eventData);
